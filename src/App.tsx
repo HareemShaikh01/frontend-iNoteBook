@@ -1,11 +1,21 @@
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./components/Home.tsx";
+import About from "./components/About.tsx";
 
-function App() {
-
+const App: React.FC = () => {
   return (
-    <>
-       <p className="text-red-500 text-2xl">hareem</p>
-    </>
-  )
-}
+    <Router>
+      <Navbar />
+      <div className="container mt-4">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+};
 
-export default App
+export default App;
