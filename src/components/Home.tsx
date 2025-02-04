@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import noteImage from "../assets/vecteezy_notes-illustration-3d_9665468.png"; 
 import NoteCard from "./NoteCard";
+import useNotesStore from "../Store/useNotesStore";
 
 const Home: React.FC = () => {
+  const {notes} = useNotesStore();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState("");
@@ -85,12 +87,12 @@ const Home: React.FC = () => {
     <h1 className="lg:ml-50 text-2xl font-semibold text-white mb-4">Your Cards</h1>
 
     <div className="grid grid-cols-3 gap-4 lg:mx-40">
-      <NoteCard title="my title" description="description" tags = "tagssss"/>
-      <NoteCard title="my title" description="description" tags = "tagssss"/>
-      <NoteCard title="my title" description="description" tags = "tagssss"/>
-      <NoteCard title="my title" description="description" tags = "tagssss"/>
+   {
+    notes.map(((note)=>(
+      <NoteCard key={note._id} title= {note.title} description={note.description} tags={note.tag}/>
+    )))
 
-
+   }
     </div>
 
 
