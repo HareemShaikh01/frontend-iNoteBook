@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa"; // Importing the edit and delete icons from react-icons
+import useStore from "../Store/useNotesStore";
 
 interface NoteCardProps {
+  noteId: string;         
   title: string;
   description: string;
   tags: string;
 }
 
-const NoteCard: React.FC<NoteCardProps> = ({ title, description, tags }) => {
+const NoteCard: React.FC<NoteCardProps> = ({noteId, title, description, tags }) => {
+  const {deleteNote, updateNote} = useStore();
   const [isPromptVisible, setIsPromptVisible] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedDescription, setEditedDescription] = useState(description);
@@ -17,12 +20,12 @@ const NoteCard: React.FC<NoteCardProps> = ({ title, description, tags }) => {
     setIsPromptVisible(true); // Show the prompt/modal
   };
 
-  const handleDelete = () => {
-    console.log("Note deleted:", title); // Logic for deleting note
+  const handleDelete = async () => {
+    await deleteNote(noteId);
   };
 
-  const handleSaveEdit = () => {
-    console.log("Updated note:", { editedTitle, editedDescription, editedTags });
+  const handleSaveEdit =async() => {
+    await updateNote(noteId,editedTitle,editedDescription,editedTags);
     setIsPromptVisible(false); // Hide the prompt after saving
   };
 

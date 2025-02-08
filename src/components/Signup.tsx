@@ -1,17 +1,28 @@
 import React, { useState } from "react";
+import useAuthStore from "../Store/useAuthStore";
+import { useNavigate } from "react-router-dom";
 
 const Signup: React.FC = () => {
+  const { signup } = useAuthStore();
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState<string | null>(null); // Added error state
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (password === confirmPassword) {
-      console.log("Signing up with:", { name, email, password });
-      // Implement your signup logic here (e.g., API call)
+      alert(`${name} ${email} ${password}`)
+      try {
+        
+        await signup(name, email, password); // Attempt signup
+        navigate('/'); // Redirect on success
+      } catch (err: any) {
+        setError(err.message || "An error occurred during signup"); // Catch and set error message
+      }
     } else {
-      console.log("Passwords do not match.");
+      alert("Passwords do not match.");
     }
   };
 
@@ -19,6 +30,7 @@ const Signup: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white p-6">
       <div className="w-full max-w-md text-center">
         <h1 className="text-4xl font-bold mb-4 text-blue-400">Sign Up</h1>
+        {error && <div className="text-red-500 mb-4">{error}</div>} {/* Display error message */}
         <div className="space-y-4">
           {/* Name Input Field */}
           <div className="flex flex-col">

@@ -1,12 +1,20 @@
 import React, { useState } from "react";
+import useAuthStore from "../Store/useAuthStore";
+import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
+  const { login } = useAuthStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleLogin = () => {
-    console.log("Logging in with:", { email, password });
-    // Implement your login logic here (e.g., API call)
+  const [error, setError] = useState<string>("");
+  const navigate = useNavigate();
+  const handleLogin = async () => {
+    try {
+      await login(email, password);
+      navigate('/'); // Redirect on success
+    } catch (err) {
+      setError("Invalid credentials or network issue. Please try again.");
+    }
   };
 
   return (
@@ -39,6 +47,9 @@ const Login: React.FC = () => {
               placeholder="Enter your password"
             />
           </div>
+
+          {/* Error Message */}
+          {error && <p className="text-red-500 mt-2">{error}</p>}
 
           {/* Submit Button */}
           <button

@@ -16,7 +16,9 @@ interface NotesState {
     loading: boolean;
     error: string | null;
     fetchNotes: () => Promise<void>;
-    addNote: () => Promise<void>;
+    addNote: (title: string, description: string, tag: string) => Promise<void>;
+    deleteNote:(id:string)=>Promise<void>;
+    updateNote:(id:string,title:string,description:string,tag:string)=>Promise<void>;
 }
 
 const useNotesStore = create<NotesState>((set) => ({
@@ -31,7 +33,7 @@ const useNotesStore = create<NotesState>((set) => ({
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'auth-token': `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2EwNmYyNjIzNzgzY2M3MTc1NDA4MDYiLCJlbWFpbCI6ImhhcmVlbWhob25tYWlAZ21haWwuY29tIiwiaWF0IjoxNzM4NTg1ODQ5LCJleHAiOjE3Mzg1ODk0NDl9.ZFxzyabW4J8xmD_BH5-qtngGS0JOwHuWQLx5kMKTgY4`, // Assuming you're using JWT for authentication
+                    'auth-token': `${localStorage.getItem("auth-token")}`, 
                 },
             });
             const data = await response.json();
@@ -40,18 +42,100 @@ const useNotesStore = create<NotesState>((set) => ({
             } else {
                 set({ loading: false, error: data.message || "Failed to fetch notes" });
             }
-        } catch (err:any) {
+        } catch (err: any) {
             set({ loading: false, error: err.message || "Failed to fetch notes" });
         }
     },
-    addNote: async(title:string, description:string ,tag:string) => {
+    addNote: async (title: string, description: string, tag: string) => {
+        set({ loading: true });
         try {
-            const response  = await fetch("")
-        } catch (err) {
-            
+
+            const response = await fetch("http://localhost:5000/notes/addNote", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    'auth-token': `${localStorage.getItem("auth-token")}`, 
+                },
+                body:JSON.stringify({title,description,tag})
+            })
+
+            const data =await response.json();
+
+            if(data.success){
+                set((state)=>({
+                    notes: [...state.notes, data.noteAdded],
+                    loading: false 
+                }))
+            }else{
+                set({ loading: false, error: data.message || "Failed to fetch notes" });
+            }
+        } catch (err:any) {
+            set({ loading: false, error: err.message || "Failed to add notes" });
         }
 
+    },
+    deleteNote:async (id:string)=>{
+        set({ loading: true });
+        try {
+            const response = await fetch(`http://localhost:5000/notes/deleteNote/${id}`,{
+                method:"DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    'auth-token': `${localStorage.getItem("auth-token")}`, 
+                }
+            })
+
+            const data = await response.json();
+
+            if(data.success){
+                set((state)=>({
+                   notes: state.notes.filter((note)=>note._id!==id),
+                   loading: false
+                }))
+            }else{
+                set({
+                    error:data.message,
+                    loading: false
+                })
+            }
+        } catch (err:any) {
+            set({ loading: false, error: err.message || "Failed to Delete notes" });
+        }
+
+       
+    },
+    updateNote: async (id: string, title: string, description: string, tag: string) => {
+        set({ loading: true });
+        try {
+            const response = await fetch(`http://localhost:5000/notes/updateNote/${id}`, {
+                method: "PUT", 
+                headers: {
+                    "Content-Type": "application/json",
+                    'auth-token': `${localStorage.getItem("auth-token")}`, 
+                },
+                body: JSON.stringify({ title, description, tag })
+            });
+    
+            const data = await response.json();
+    
+            if (data.success) {
+                set((state) => ({
+                    notes: state.notes.map((note) =>
+                        note._id === id ? data.note : note 
+                    ),
+                    loading: false
+                }));
+            } else {
+                set({
+                    error: data.message || "Failed to update note",
+                    loading: false
+                });
+            }
+        } catch (err: any) {
+            set({ loading: false, error: err.message || "Failed to update note" });
+        }
     }
+    
 }));
 
 export default useNotesStore;
