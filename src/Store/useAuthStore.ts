@@ -31,7 +31,7 @@ const useAuthStore = create<AuthState>((set) => ({
 
     // 🔑 Signup Function
     signup: async (name, email, password) => {
-        const response = await fetch("https://backend-inotebook.vercel.app/auth/signup", {
+        const response = await fetch("https://backend-i-note-book.vercel.app/auth/signup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, email, password }),
@@ -48,7 +48,7 @@ const useAuthStore = create<AuthState>((set) => ({
 
     // 🔑 Login Function
     login: async (email, password) => {
-        const response = await fetch("https://backend-inotebook.vercel.app/auth/login", {
+        const response = await fetch("https://backend-i-note-book.vercel.app/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),
@@ -90,7 +90,7 @@ const useAuthStore = create<AuthState>((set) => ({
             return;
         }
 
-        const response = await fetch("https://backend-inotebook.vercel.app/auth/getUser", {
+        const response = await fetch("https://backend-i-note-book.vercel.app/auth/getUser", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

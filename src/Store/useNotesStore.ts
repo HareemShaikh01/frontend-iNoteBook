@@ -29,7 +29,7 @@ const useNotesStore = create<NotesState>((set) => ({
     fetchNotes: async () => {
         set({ loading: true });
         try {
-            const response = await fetch('https://backend-inotebook.vercel.app/notes/fetchAllNotes', {
+            const response = await fetch('https://backend-i-note-book.vercel.app/notes/fetchAllNotes', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ const useNotesStore = create<NotesState>((set) => ({
         set({ loading: true });
         try {
 
-            const response = await fetch("https://backend-inotebook.vercel.app/notes/addNote", {
+            const response = await fetch("https://backend-i-note-book.vercel.app/notes/addNote", {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
@@ -77,7 +77,7 @@ const useNotesStore = create<NotesState>((set) => ({
     deleteNote:async (id:string)=>{
         set({ loading: true });
         try {
-            const response = await fetch(`https://backend-inotebook.vercel.app/notes/deleteNote/${id}`,{
+            const response = await fetch(`https://backend-i-note-book.vercel.app/notes/deleteNote/${id}`,{
                 method:"DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -107,7 +107,7 @@ const useNotesStore = create<NotesState>((set) => ({
     updateNote: async (id: string, title: string, description: string, tag: string) => {
         set({ loading: true });
         try {
-            const response = await fetch(`https://backend-inotebook.vercel.app/notes/updateNote/${id}`, {
+            const response = await fetch(`https://backend-i-note-book.vercel.app/notes/updateNote/${id}`, {
                 method: "PUT", 
                 headers: {
                     "Content-Type": "application/json",
